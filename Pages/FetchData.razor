@@ -2,15 +2,18 @@
 @inject HttpClient Http
 
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Weather Forecast</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>Weather Forecast</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+
+<input type="text" @bind="@City" placeholder="City Name"/>
+<button type="submit" @onclick="NewCall">Get Weather</button>
+
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@message</em></p>
 }
 else
 {
@@ -49,17 +52,25 @@ else
 
 @code {
 
-
-    //https://weatherdbi.herokuapp.com/data/weather/{city}
-
-
     private WeatherForecast? forecasts;
 
+    private string City;
 
-    protected override async Task OnInitializedAsync()
+    private string message = "Please enter city name";
+
+    // This will load the data right when the page loads
+    // I want to wait till user enters city
+    //protected override async Task OnInitializedAsync()
+    //{
+    //forecasts = await Http.GetFromJsonAsync<WeatherForecast>("seattle");
+
+    //}
+
+    public async Task NewCall()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast>("seattle");
-
+        message = "Loading...";
+        forecasts = null;
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast>(City);
     }
 
     public class WeatherForecast
